@@ -31,6 +31,7 @@ class Recipe(object):
             str_to_add = str(ingredient.quantity) + " oz of " + ingredient.name + "\n"
             final_string += str_to_add
         return final_string
+        
 '''
 Ingredient class represents ingredients in a recipe. An Ingredient has a name and quanity, and two setter
 methods
