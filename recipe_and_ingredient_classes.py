@@ -66,9 +66,7 @@ class Ingredient(object):
 
 def get_kind(name):
     for kind in KINDS[:-1]: #exclude "other"
-        # print('kind: ' + kind)
-        # print('name: ' + name)
-        # print("\n")
+        # we need to fix edge text cases like milk chocolate chips
         if kind in name:
             return kind
 

@@ -2,6 +2,7 @@ import numpy as np
 from recipe_and_ingredient_classes import Recipe, Ingredient, KINDS
 
 
+
 # Function to find the  
 # Nth occurrence of a character  
 def find_nth_occur(string, ch, N) : 
@@ -21,7 +22,8 @@ def find_nth_occur(string, ch, N) :
 def read_recipes():
 
     recipe_arr = []#recipes to be returned
-    all_ingredient_names = []#all ingredients 
+    # all_ingredient_names = []#all ingredients 
+    all_ingredient_matrix = [[],[],[],[],[],[],[],[],[],[],[]]
 
     open_file = open("cleaned_recipes.txt", 'r')#read file
     lines = open_file.readlines()#read lines
@@ -37,9 +39,11 @@ def read_recipes():
                 line_split = lines[j][:-1].split()#seperate quantities from name
                 ingredient_amount = line_split[0]#set quantity
                 ingredient_name = " ".join(line_split[2:])#set name
-                if ingredient_name not in all_ingredient_names:#if ingredient name not in total name of ingredient name
-                    all_ingredient_names.append(ingredient_name)# add ingredient name
+                # if ingredient_name not in all_ingredient_names:#if ingredient name not in total name of ingredient name
+                #     all_ingredient_names.append(ingredient_name)# add ingredient name
                 ingredient = Ingredient(ingredient_name, float(ingredient_amount))#make new ingredient
+                if ingredient_name not in all_ingredient_matrix[KINDS.index(ingredient.kind)]:
+                    all_ingredient_matrix[KINDS.index(ingredient.kind)].append(ingredient_name)
                 ingredients_arr.append(ingredient)#add ingredient to respective recipe
                 j+=1
 
@@ -50,7 +54,7 @@ def read_recipes():
             new_recipe = Recipe(final_recipe_name, ingredients_arr)
             recipe_arr.append(new_recipe)#add recipe to list of 6 recipes
 
-    return recipe_arr
+    return [recipe_arr, all_ingredient_matrix]
 
 
 def determine_rations(all_recipes):
@@ -73,12 +77,20 @@ def determine_rations(all_recipes):
     return ingredient_kind_overall_ratio
 
             
+def generate_recipes(overall_ingredient_kind_ratio):
+    new_recipes = []
+
+
 
 
 if __name__ == "__main__":
-    all_recipes = read_recipes()
+    read_recipes_return = read_recipes()
 
+    all_recipes = read_recipes_return[0]
     overall_ingredient_kind_ratio = determine_rations(all_recipes)
+
+    generate_recipes(overall_ingredient_kind_ratio)
+
 
     
 
