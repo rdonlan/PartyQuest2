@@ -1,6 +1,5 @@
-
-from recipe_and_ingredient_classes import Recipe, Ingredient
-
+import numpy as np 
+from recipe_and_ingredient_classes import Recipe, Ingredient, KINDS
 
 
 # Function to find the  
@@ -54,5 +53,34 @@ def read_recipes():
     return recipe_arr
 
 
+def determine_rations(all_recipes):
+
+    recipe_kind_ratios_added = [0,0,0,0,0,0,0,0,0,0,0]
+
+    for recipe in all_recipes:
+        ingredient_kind_amounts = [0,0,0,0,0,0,0,0,0,0,0] # this will be 11 indexes long, with the amounts of each type in the indexes respective to their position in KINDS
+        for ingredient in recipe.ingredient_arr:
+            ingredient_kind = ingredient.kind
+            ingredient_quantity = ingredient.quantity
+            kind_index = KINDS.index(ingredient_kind)
+            ingredient_kind_amounts[kind_index] += ingredient_quantity
+        
+        recipe_kind_ratio = np.divide(ingredient_kind_amounts, sum(ingredient_kind_amounts))
+        recipe_kind_ratios_added += recipe_kind_ratio
+
+    ingredient_kind_overall_ratio = np.divide(recipe_kind_ratios_added, len(all_recipes))
+
+    return ingredient_kind_overall_ratio
+
+            
+
+
 if __name__ == "__main__":
     all_recipes = read_recipes()
+
+    overall_ingredient_kind_ratio = determine_rations(all_recipes)
+
+    
+
+
+

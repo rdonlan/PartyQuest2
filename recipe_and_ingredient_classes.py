@@ -5,7 +5,7 @@ type is in the recipe
 '''
 
 
-KINDS = ["sugar", "flour", "salt", "butter", "baking powder", "milk", "egg", "vanilla", "chips", "other"]
+KINDS = ["sugar", "flour", "salt", "butter", "baking powder", "milk", "egg", "vanilla", "chips", "baking soda", "other"]
 
 class Recipe(object):
     def __init__(self, name, ingredient_arr):
@@ -66,10 +66,13 @@ class Ingredient(object):
 
 def get_kind(name):
     for kind in KINDS[:-1]: #exclude "other"
+        # print('kind: ' + kind)
+        # print('name: ' + name)
+        # print("\n")
         if kind in name:
             return kind
-        else:
-            return "other"
+
+    return "other"
 
 
 '''
