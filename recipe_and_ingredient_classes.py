@@ -4,6 +4,9 @@ representation method, and check_for_ingredients method. Check_for_ingrediens ch
 type is in the recipe 
 '''
 
+
+KINDS = ["sugar", "flour", "salt", "butter", "baking powder", "milk", "egg", "vanilla", "chips", "other"]
+
 class Recipe(object):
     def __init__(self, name, ingredient_arr):
         self.name = name #name of recipe string
@@ -40,6 +43,7 @@ class Ingredient(object):
     def __init__(self, name, quantity):
         self.name = name            # string
         self.quantity = quantity    # float
+        self.kind = get_kind(name)  # string
         
     '''
     Sets the quantity of the Ingredient
@@ -51,6 +55,7 @@ class Ingredient(object):
     '''
     def set_name(self, name):
         self.name = name
+        self.kind = get_kind(name)
 
     '''
     Returns quantity of the name of the ingredient 
@@ -58,3 +63,34 @@ class Ingredient(object):
     def __str__(self):
         # allows you to use print(Ingredient)
         return str(self.quantity) + " oz of " + self.name
+
+def get_kind(name):
+    for kind in KINDS[:-1]: #exclude "other"
+        if kind in name:
+            return kind
+        else:
+            return "other"
+
+
+'''
+    if "sugar" in name:
+        return "sugar"
+    if "flour" in name:
+        return "flour"
+    if "salt" in name:
+        return "salt"
+    if "butter" in name:
+        return "butter"
+    if "baking powder" in name:
+        return "baking powder"
+    if "milk" in name:
+        return "milk"
+    if "egg" in name:
+        return "egg"
+    if "vanilla" in name:
+        return "vanilla"
+    if "chips" in name:
+        return "chips"
+    else:
+        return "other"
+'''
