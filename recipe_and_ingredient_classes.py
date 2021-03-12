@@ -74,6 +74,7 @@ def get_kind(name):
 
 
 '''
+def get_kind(name):
     if "sugar" in name:
         return "sugar"
     if "flour" in name:
@@ -81,11 +82,13 @@ def get_kind(name):
     if "salt" in name:
         return "salt"
     if "butter" in name:
-        return "butter"
+        if "butterscotch" not in name: #exclude edge case
+            return "butter"
     if "baking powder" in name:
         return "baking powder"
     if "milk" in name:
-        return "milk"
+        if "chocolate" not in name: #exclude edge case
+            return "milk"
     if "egg" in name:
         return "egg"
     if "vanilla" in name:
