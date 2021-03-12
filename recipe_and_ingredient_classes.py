@@ -73,7 +73,12 @@ class Ingredient(object):
 #     return "other"
 
 
-
+'''Helper Function to assign ingredient kinds from names
+    Params:
+        @string name: name of ingredient
+    Return:
+        String --> more general type of ingredient
+'''
 def get_kind(name):
     if "sugar" in name:
         return "sugar"
