@@ -64,16 +64,16 @@ class Ingredient(object):
         # allows you to use print(Ingredient)
         return str(self.quantity) + " oz of " + self.name
 
-def get_kind(name):
-    for kind in KINDS[:-1]: #exclude "other"
-        # we need to fix edge text cases like milk chocolate chips
-        if kind in name:
-            return kind
+# def get_kind(name):
+#     for kind in KINDS[:-1]: #exclude "other"
+#         # we need to fix edge text cases like milk chocolate chips
+#         if kind in name:
+#             return kind
 
-    return "other"
+#     return "other"
 
 
-'''
+
 def get_kind(name):
     if "sugar" in name:
         return "sugar"
@@ -82,7 +82,7 @@ def get_kind(name):
     if "salt" in name:
         return "salt"
     if "butter" in name:
-        if "butterscotch" not in name: #exclude edge case
+        if "butterscotch" not in name and "buttermilk" not in name: #exclude edge case
             return "butter"
     if "baking powder" in name:
         return "baking powder"
@@ -95,6 +95,7 @@ def get_kind(name):
         return "vanilla"
     if "chips" in name:
         return "chips"
+    if "baking soda" in name:
+        return "baking soda"
     else:
         return "other"
-'''

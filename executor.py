@@ -1,6 +1,19 @@
 import numpy as np 
+import random
 from recipe_and_ingredient_classes import Recipe, Ingredient, KINDS
 
+TOTAL_RECIPES_OUNCES = 0
+
+
+
+# def normalize_recipe(recipe):
+#    denominator = 0 
+#    for ingredient in recipe.ingredient_arr:
+#       denominator += ingredient.quantity
+#    factor = 100/denominator
+#    for ingredient in recipe.ingredient_arr:
+#       #renormalize values to 2 decimal points
+#       ingredient.set_quantity(float("{:.2f}".format(ingredient.quantity * factor))) 
 
 
 # Function to find the  
@@ -38,9 +51,9 @@ def read_recipes():
             while(lines[j] != '\n' and j < (len(lines) - 1)):
                 line_split = lines[j][:-1].split()#seperate quantities from name
                 ingredient_amount = line_split[0]#set quantity
+                global TOTAL_RECIPES_OUNCES
+                TOTAL_RECIPES_OUNCES += float(ingredient_amount)
                 ingredient_name = " ".join(line_split[2:])#set name
-                # if ingredient_name not in all_ingredient_names:#if ingredient name not in total name of ingredient name
-                #     all_ingredient_names.append(ingredient_name)# add ingredient name
                 ingredient = Ingredient(ingredient_name, float(ingredient_amount))#make new ingredient
                 if ingredient_name not in all_ingredient_matrix[KINDS.index(ingredient.kind)]:
                     all_ingredient_matrix[KINDS.index(ingredient.kind)].append(ingredient_name)
@@ -77,8 +90,33 @@ def determine_rations(all_recipes):
     return ingredient_kind_overall_ratio
 
             
-def generate_recipes(overall_ingredient_kind_ratio):
-    new_recipes = []
+def generate_recipes(overall_ingredient_kind_ratio, ingredient_kinds_array, num_recipes):
+
+    generated_recipes = []
+
+    # generating 5 new ratios
+    new_ratios = []
+    for i in range(5):
+        cloned_ratios = overall_ingredient_kind_ratio.copy()
+        for j in range(len(cloned_ratios)):
+            value_to_add = np.random.uniform(-1 * cloned_ratios[j], cloned_ratios[j])
+            cloned_ratios[j] = cloned_ratios[j] + value_to_add
+        new_ratios.append(cloned_ratios)
+
+    for ratio_arr in new_ratios:
+        ingredient_arr = []
+        for i in range(len(ingredient_kinds_array)): 
+            new_ingredient_name = np.random.choice(ingredient_kinds_array[i])
+            # average amount of ounces in a recipe from inspiring set times a random number for variability
+            factor_to_mult_by = (TOTAL_RECIPES_OUNCES / num_recipes) * np.random.uniform(0.75, 1.5)
+            new_ingredient_quantity = float("{:.2f}".format(ratio_arr[i] * factor_to_mult_by))
+            ingredient_to_add = Ingredient(new_ingredient_name, new_ingredient_quantity)
+            ingredient_arr.append(ingredient_to_add)
+        recipe_name = ingredient_arr[-1].name + ' cookie #' + str(random.randint(0,100))
+        new_recipe = Recipe(recipe_name, ingredient_arr)
+        generated_recipes.append(new_recipe)
+
+    return generated_recipes
 
 
 
@@ -86,10 +124,21 @@ def generate_recipes(overall_ingredient_kind_ratio):
 if __name__ == "__main__":
     read_recipes_return = read_recipes()
 
+    # list of all recipes from inspiring set
     all_recipes = read_recipes_return[0]
+
+    # list of all ingredients sorted by their kind
+    ingredient_kinds_array = read_recipes_return[1]
+
+    # ratio (adding up to 1) or our kinds from the recipes in the inspiring set
     overall_ingredient_kind_ratio = determine_rations(all_recipes)
 
-    generate_recipes(overall_ingredient_kind_ratio)
+    new_crazy_recipes = generate_recipes(overall_ingredient_kind_ratio, ingredient_kinds_array, len(all_recipes))
+
+    print("\n")
+
+    for recipe in new_crazy_recipes:
+        print(recipe)
 
 
     
