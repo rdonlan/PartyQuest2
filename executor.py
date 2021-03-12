@@ -3,6 +3,7 @@ import random
 from recipe_and_ingredient_classes import Recipe, Ingredient, KINDS
 
 TOTAL_RECIPES_OUNCES = 0
+NEW_RECIPES_TO_BE_GENERATED = 5
 
 
 
@@ -15,14 +16,17 @@ TOTAL_RECIPES_OUNCES = 0
 #       #renormalize values to 2 decimal points
 #       ingredient.set_quantity(float("{:.2f}".format(ingredient.quantity * factor))) 
 
-
-# Function to find the  
-# Nth occurrence of a character  
+'''Function to find the Nth occurrence of a character  
+    params:
+        @string {str}: string that you are checking
+        @ch {str}: the char you want to find the nth occurance of
+        @N {int}: the number occurance you want to find
+    return:
+        int --> the nth occurance or -1 if not present
+'''
 def find_nth_occur(string, ch, N) : 
     occur = 0;  
-  
-    # Loop to find the Nth  
-    # occurence of the character  
+    # loop to find the Nth occurence of the character  
     for i in range(len(string)) : 
         if (string[i] == ch) : 
             occur += 1;  
@@ -32,32 +36,42 @@ def find_nth_occur(string, ch, N) :
       
     return -1; 
 
+'''
+This method reads the cleaned_recipes.txt file and creates the recipe and ingredient objects
+from the inspiring set
+params:
+    NONE
+return:
+    @recipe_arr {arr[Recipe objs]}: this array contains all of the recipe objects from the inspiring set
+    @all_ingredient_matrix {arr[arr[str]]}: this 2D matrix holds 11 arrays which each contain the ingredients 
+    of one type. So the first array contains all types of sugar from the inspiring set, the next all types
+    of flour, etc.
+'''
 def read_recipes():
 
-    recipe_arr = []#recipes to be returned
-    # all_ingredient_names = []#all ingredients 
+    recipe_arr = []
     all_ingredient_matrix = [[],[],[],[],[],[],[],[],[],[],[]]
 
-    open_file = open("cleaned_recipes.txt", 'r')#read file
-    lines = open_file.readlines()#read lines
+    open_file = open("cleaned_recipes.txt", 'r')
+    lines = open_file.readlines()
     
 
-    for i in range(len(lines)):# go through lines
-
-        if lines[i-1][0] == 'h':
+    for i in range(len(lines)):
+        # recipe starts after its url which all start with https
+        if lines[i-1][0] == 'h': 
             j = i
-            ingredients_arr = []#list to hold ingredients for recipe
-            
+            ingredients_arr = []
+            # iterate through all ingredients
             while(lines[j] != '\n' and j < (len(lines) - 1)):
-                line_split = lines[j][:-1].split()#seperate quantities from name
-                ingredient_amount = line_split[0]#set quantity
+                line_split = lines[j][:-1].split()
+                ingredient_amount = line_split[0]
                 global TOTAL_RECIPES_OUNCES
                 TOTAL_RECIPES_OUNCES += float(ingredient_amount)
-                ingredient_name = " ".join(line_split[2:])#set name
-                ingredient = Ingredient(ingredient_name, float(ingredient_amount))#make new ingredient
+                ingredient_name = " ".join(line_split[2:])
+                ingredient = Ingredient(ingredient_name, float(ingredient_amount))
                 if ingredient_name not in all_ingredient_matrix[KINDS.index(ingredient.kind)]:
                     all_ingredient_matrix[KINDS.index(ingredient.kind)].append(ingredient_name)
-                ingredients_arr.append(ingredient)#add ingredient to respective recipe
+                ingredients_arr.append(ingredient)
                 j+=1
 
             recipe_name = lines[i-1]
@@ -65,38 +79,68 @@ def read_recipes():
             new_recipe_name = recipe_name[name_begin_index + 1 : -2]
             final_recipe_name = new_recipe_name.replace("-", " ")
             new_recipe = Recipe(final_recipe_name, ingredients_arr)
-            recipe_arr.append(new_recipe)#add recipe to list of 6 recipes
+            recipe_arr.append(new_recipe)
 
     return [recipe_arr, all_ingredient_matrix]
 
 
+'''
+This method determines the ratios of the 11 different kinds of ingredients to each other from the recipes in the 
+inspiring set
+params:
+    @all_recipes {arr[Recipe objs]}: all of the recipe objects from the inspiring set
+return:
+    @ingredient_kind_overall_ratio {arr[float]}: contains an array of the ratios of each type of ingredient to a whole
+    recipe. The total of the ratios sum up to one.
+'''
 def determine_rations(all_recipes):
 
     recipe_kind_ratios_added = [0,0,0,0,0,0,0,0,0,0,0]
 
     for recipe in all_recipes:
-        ingredient_kind_amounts = [0,0,0,0,0,0,0,0,0,0,0] # this will be 11 indexes long, with the amounts of each type in the indexes respective to their position in KINDS
+        # this will be 11 indexes long, with the amounts of each type in the indexes respective to their position in KINDS
+        ingredient_kind_amounts = [0,0,0,0,0,0,0,0,0,0,0] 
         for ingredient in recipe.ingredient_arr:
             ingredient_kind = ingredient.kind
             ingredient_quantity = ingredient.quantity
+            # determines which kind of ingredient ratio to increment
             kind_index = KINDS.index(ingredient_kind)
             ingredient_kind_amounts[kind_index] += ingredient_quantity
         
+        # normalizes the ratios for a singular recipe so that it sums up to 1 
         recipe_kind_ratio = np.divide(ingredient_kind_amounts, sum(ingredient_kind_amounts))
+        # add all of the ratios together for all the recipes from the inspiring set
         recipe_kind_ratios_added += recipe_kind_ratio
 
+    # divide every ratio within this array by the total number of recipes to make the total ratios also sum to 1
     ingredient_kind_overall_ratio = np.divide(recipe_kind_ratios_added, len(all_recipes))
 
     return ingredient_kind_overall_ratio
 
-            
+
+'''
+This method generates a set of new recipes equal to the global variable NEW_RECIPES_TO_BE_GENERATED. It does this by taking
+the 'ideal' ratio of kinds of ingredients from the @overall_ingredient_kind_ratio, and then slightly altering it. It alters it by
+either adding a randomly generated number between its negative value and its positive value.  So the two edge cases are that the ingredient
+kind can have 0oz, or 2 times the 'ideal' ratio in it.  Then the total amount of ounces in the recipe will be similary randomly generated. The average
+ounces of a recipe is found in this method, and it is multiplied by 0.75-1.5 to determine the total amount of ounces for the newly generated recipe. 
+It will also (currently) select one ingredient from each type to be added to the recipe in the amount of ounces of its slightly altered ratio.
+params:
+    @overall_ingredient_kind_ratio {arr[float]}: contains an array of the ratios of each type of ingredient to a whole
+    recipe. THe total of the ratios sum up to one.
+    @ingredient_kinds_array {arr[arr[str]]}: this 2D matrix holds 11 arrays which each contain the ingredients 
+    of one type. So the first array contains all types of sugar from the inspiring set, the next all types
+    of flour, etc.
+    @num_recipes {int}: the number of recipes from our inspiring set
+return:
+    generated_recipes {arr[Recipe objs]}: this contains the newly generated recipes
+'''      
 def generate_recipes(overall_ingredient_kind_ratio, ingredient_kinds_array, num_recipes):
 
     generated_recipes = []
 
-    # generating 5 new ratios
     new_ratios = []
-    for i in range(5):
+    for i in range(NEW_RECIPES_TO_BE_GENERATED):
         cloned_ratios = overall_ingredient_kind_ratio.copy()
         for j in range(len(cloned_ratios)):
             value_to_add = np.random.uniform(-1 * cloned_ratios[j], cloned_ratios[j])
@@ -133,10 +177,12 @@ if __name__ == "__main__":
     # ratio (adding up to 1) or our kinds from the recipes in the inspiring set
     overall_ingredient_kind_ratio = determine_rations(all_recipes)
 
+    # our new recipes!
     new_crazy_recipes = generate_recipes(overall_ingredient_kind_ratio, ingredient_kinds_array, len(all_recipes))
 
     print("\n")
 
+    # this will print the recipes out for you once you run this file!
     for recipe in new_crazy_recipes:
         print(recipe)
 
