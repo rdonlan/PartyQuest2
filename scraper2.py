@@ -7,10 +7,10 @@ import pprint
 
 
 
+RECIPIECOUNTER = 0
 
 
-
-
+URlVISITED = []
 
 
 
@@ -105,13 +105,30 @@ lists simultaneously. It first trimms down and converts these parts as necessary
 for a given ingredient, converts to ounces, then writes it to a file.  
 
 '''
-def read_and_make_recipie(html_string, name):
-    t.write(name)
+def read_and_make_recipie(html_string):
+    global RECIPIECOUNTER
+    recipie_name = re.findall("<title>.*|Allrecipes<\/title>", html_string)[0][7:-21] #gets name
+    recipie_rating = re.findall("rating\" content=\".*\">", html_string)[0][17:-2]
+    ingredient_and_amounts = get_ingredients(html_string)
+    RECIPIECOUNTER = RECIPIECOUNTER + 1
+    t.write(str(RECIPIECOUNTER) + " " + recipie_name)
     t.write("\n")
+    t.write(recipie_rating)
+    t.write("\n")
+    t.write("\n")
+
+    for i in ingredient_and_amounts:
+        t.write(i[0] + " oz of " + i[1])
+        t.write("\n")
+
+    t.write("\n\n")
+    
+
+def get_ingredients(html_string):
     list_of_ingredient = re.findall("data-ingredient = \".+?\" data-unit", html_string)
     list_of_ingredient_amounts = re.findall("data-init-quantity = \".+?\" data-unit", html_string)
     list_of_units = re.findall("data-unit = \".*?\"", html_string)
-    ing_to_add = []
+    ingredient_to_add = []
     for i in range(len(list_of_ingredient)):
         ingredient_amount_unit_list = str(re.findall("\".+?\"", list_of_units[i]))
         ingredient_amount = str(re.findall("\".+?\"", list_of_ingredient_amounts[i]))
@@ -121,7 +138,6 @@ def read_and_make_recipie(html_string, name):
         if "cup" in ingredient_amount_unit:
             ingredient_amount = (ingredient_amount * 8)
         elif ingredient_amount_unit == "" or "egg" in ingredient_amount_unit:
-            print(ingredient_amount)
             ingredient_amount = (ingredient_amount * 1.7)
         elif "table" in ingredient_amount_unit:
             ingredient_amount = (ingredient_amount * .5)
@@ -133,7 +149,7 @@ def read_and_make_recipie(html_string, name):
             ingredient_amount = (ingredient_amount * 16)
         elif "pinch" or "drop" or "dash" in ingredient_amount_unit:
             ingredient_amount = (ingredient_amount / 32)
-        elif "ounce)" in ingredient_amount_unit:
+        elif "ounce" in ingredient_amount_unit:
             ingredient_amount = float(ingredient_amount_unit[1:-7])
         elif "pint" in ingredient_amount_unit:
             ingredient_amount = (ingredient_amount_unit * 16)
@@ -143,15 +159,9 @@ def read_and_make_recipie(html_string, name):
             ingredient_amount = (ingredient_amount_unit * 128)
         else:
             ingredient_amount = ingredient_amount
-        t.write(str(ingredient_amount) + " oz " + str(ingredient_name[3:-3]) )
-        t.write("\n")
-
-        ing_to_add.append(Ingredient(ingredient_name[3:-3], ingredient_amount))
+        ingredient_to_add.append( ( str(ingredient_amount), str(ingredient_name[3:-3]) ) )
     
-    
-    t.write("\n\n")
-    
-
+    return ingredient_to_add
 
 
 '''
@@ -164,25 +174,31 @@ too. Finally, if it is not a parent of recipies, it iterates through all the chi
 on them. There are try and finally statements, becase there are some inconsistency on allrecpies.com. 
 '''
 def travese_tree_of_cookies_and_get_units(url_link):
+    global URlVISITED
+    print(url_link)
+    URlVISITED.append(url_link)
     html_string = get_url_string(url_link)
     if check_if_recipe(html_string):
         try:
-            read_and_make_recipie(html_string, url_link)
+            read_and_make_recipie(html_string)
+            print(RECIPIECOUNTER)
+            print("recipie added")
+
+
         finally:
             return
     if parent_of_recipies(html_string):
-        
         recipies = get_recipies_from_recipie_group(html_string)
         for element in recipies:
 
             try:
-                travese_tree_of_cookies_and_get_units(element)
+                if element not in URlVISITED:
+                    travese_tree_of_cookies_and_get_units(element)
             finally:
-                print("recipie added")
-        
-                
-        
+                x = 1
+
         return
+
     for url in get_child_hyperlinks(html_string):
         travese_tree_of_cookies_and_get_units(url)
     return
@@ -190,11 +206,16 @@ def travese_tree_of_cookies_and_get_units(url_link):
 
 
 if __name__ == "__main__":
+
     url1 = "https://www.allrecipes.com/recipes/362/desserts/cookies/"#cookies url
-    t = open("filename.txt", "w")#file to write too
+    t = open("recipies.txt", "w")#file to write too
+    url = "https://www.allrecipes.com/recipe/11392/orange-white-chocolate-chip-beltane-cookies/"
+    
 
     
+    #t.write(html_string)
+    #read_and_make_recipie(html_string, "TEST")
     travese_tree_of_cookies_and_get_units(url1)#traverse tree
-
+    print(RECIPIECOUNTER)
     t.close()#close file
 
