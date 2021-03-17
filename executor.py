@@ -1,6 +1,7 @@
 import numpy as np 
 import random
 from recipe_and_ingredient_classes import Recipe, Ingredient, KINDS
+from fitness_functions import novel_fitness_function
 
 TOTAL_RECIPES_OUNCES = 0
 NEW_RECIPES_TO_BE_GENERATED = 5
@@ -81,6 +82,8 @@ def read_recipes():
             new_recipe = Recipe(final_recipe_name, ingredients_arr)
             recipe_arr.append(new_recipe)
 
+
+
     return [recipe_arr, all_ingredient_matrix]
 
 
@@ -153,9 +156,7 @@ def generate_recipes(overall_ingredient_kind_ratio, ingredient_kinds_array, num_
             # special case for 'other' kind of ingredients where we want multiple of them instead of just 1
             if i == (len(ingredient_kinds_array) - 1):
                 other_ingredients_to_add = []
-                print(len(ingredient_kinds_array[i]))
                 num_other_ingredients = random.randint(1, 5)
-                print('num other ingredients: ' + str(num_other_ingredients))
                 for j in range(num_other_ingredients):
                     other_ingredient_name_to_add = ingredient_kinds_array[i][random.randint(0, len(ingredient_kinds_array[i]) - 1)]
                     # check to make sure ingredient not already selected
@@ -180,6 +181,32 @@ def generate_recipes(overall_ingredient_kind_ratio, ingredient_kinds_array, num_
 
     return generated_recipes
 
+# this function will create a 2d array that stores a value depending on if ingredients are together in a recipe from the inspiring set
+def generate_taste_matrix(ingredient_kinds_array, all_recipes):
+    single_ingredients_arr = []
+    for ingredient_kind in ingredient_kinds_array:
+        single_ingredients_arr += ingredient_kind
+    flavor_matrix = []
+    for ingredient in single_ingredients_arr:
+        flavor_matrix.append([0]*len(single_ingredients_arr))
+    for recipe in all_recipes:
+        ingredients = recipe.ingredient_arr
+        for ingredient in ingredients:
+            ingredient_name = ingredient.name
+            ingredient_flavor_index = single_ingredients_arr.index(ingredient_name)
+            for j in range(len(ingredients)):
+                other_ingredient = ingredients[j]
+                other_ingredient_name = other_ingredient.name
+                other_ingredient_flavor_index = single_ingredients_arr.index(other_ingredient_name)
+                # below is adding a value to the flavor matrix if two ingredients are in a recipe together
+                # add a multiplier by the recipe ranking below when ready
+                # this if stament doesn't change the flavor index when comparing the ingredient to itself
+                if other_ingredient_flavor_index != ingredient_flavor_index:
+                    flavor_matrix[ingredient_flavor_index][other_ingredient_flavor_index] += 1
+    
+    return flavor_matrix
+
+
 
 
 
@@ -192,6 +219,8 @@ if __name__ == "__main__":
     # list of all ingredients sorted by their kind
     ingredient_kinds_array = read_recipes_return[1]
 
+    generate_taste_matrix(ingredient_kinds_array, all_recipes)
+
     # ratio (adding up to 1) or our kinds from the recipes in the inspiring set
     overall_ingredient_kind_ratio = determine_rations(all_recipes)
 
@@ -200,9 +229,11 @@ if __name__ == "__main__":
 
     print("\n")
 
-    # this will print the recipes out for you once you run this file!
-    for recipe in new_crazy_recipes:
-        print(recipe)
+    # # this will print the recipes out for you once you run this file!
+    # for recipe in new_crazy_recipes:
+    #     print(recipe)
+    #     novel_fitness = novel_fitness_function(recipe)
+    #     print(novel_fitness)
 
 
     
