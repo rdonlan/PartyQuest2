@@ -1,7 +1,7 @@
 import numpy as np 
 import random
 from recipe_and_ingredient_classes import Recipe, Ingredient, KINDS
-from fitness_functions import novel_fitness_function
+from fitness_functions import novel_fitness_function, value_fitness_function
 
 TOTAL_RECIPES_OUNCES = 0
 NEW_RECIPES_TO_BE_GENERATED = 5
@@ -204,7 +204,7 @@ def generate_taste_matrix(ingredient_kinds_array, all_recipes):
                 if other_ingredient_flavor_index != ingredient_flavor_index:
                     flavor_matrix[ingredient_flavor_index][other_ingredient_flavor_index] += 1
     
-    return flavor_matrix
+    return [flavor_matrix,single_ingredients_arr]
 
 
 
@@ -219,15 +219,28 @@ if __name__ == "__main__":
     # list of all ingredients sorted by their kind
     ingredient_kinds_array = read_recipes_return[1]
 
-    generate_taste_matrix(ingredient_kinds_array, all_recipes)
+    return_arr = generate_taste_matrix(ingredient_kinds_array, all_recipes)
+
+    flavor_matrix = return_arr[0]
+    single_ingredients_arr = return_arr[1]
 
     # ratio (adding up to 1) or our kinds from the recipes in the inspiring set
     overall_ingredient_kind_ratio = determine_rations(all_recipes)
+
+    
+
+    
 
     # our new recipes!
     new_crazy_recipes = generate_recipes(overall_ingredient_kind_ratio, ingredient_kinds_array, len(all_recipes))
 
     print("\n")
+
+    # this will print the recipes out for you once you run this file!
+    for recipe in new_crazy_recipes:
+        print(recipe)
+        novel_fitness = value_fitness_function(flavor_matrix, single_ingredients_arr, recipe)
+        print(novel_fitness)
 
     # # this will print the recipes out for you once you run this file!
     # for recipe in new_crazy_recipes:
