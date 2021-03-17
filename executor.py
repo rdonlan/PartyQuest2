@@ -150,12 +150,30 @@ def generate_recipes(overall_ingredient_kind_ratio, ingredient_kinds_array, num_
     for ratio_arr in new_ratios:
         ingredient_arr = []
         for i in range(len(ingredient_kinds_array)): 
-            new_ingredient_name = np.random.choice(ingredient_kinds_array[i])
-            # average amount of ounces in a recipe from inspiring set times a random number for variability
-            factor_to_mult_by = (TOTAL_RECIPES_OUNCES / num_recipes) * np.random.uniform(0.75, 1.5)
-            new_ingredient_quantity = float("{:.2f}".format(ratio_arr[i] * factor_to_mult_by))
-            ingredient_to_add = Ingredient(new_ingredient_name, new_ingredient_quantity)
-            ingredient_arr.append(ingredient_to_add)
+            # special case for 'other' kind of ingredients where we want multiple of them instead of just 1
+            if i == (len(ingredient_kinds_array) - 1):
+                other_ingredients_to_add = []
+                print(len(ingredient_kinds_array[i]))
+                num_other_ingredients = random.randint(1, 5)
+                print('num other ingredients: ' + str(num_other_ingredients))
+                for j in range(num_other_ingredients):
+                    other_ingredient_name_to_add = ingredient_kinds_array[i][random.randint(0, len(ingredient_kinds_array[i]) - 1)]
+                    # check to make sure ingredient not already selected
+                    while(other_ingredient_name_to_add in other_ingredients_to_add):
+                        other_ingredient_name_to_add = ingredient_kinds_array[i][random.randint(0, len(ingredient_kinds_array[i]) - 1)]
+                    other_ingredients_to_add.append(other_ingredient_name_to_add)
+                for ingredient in other_ingredients_to_add:
+                    factor_to_mult_by = (TOTAL_RECIPES_OUNCES / num_recipes) * np.random.uniform(0.75, 1.5)
+                    new_ingredient_quantity = float("{:.2f}".format((ratio_arr[i] / len(other_ingredients_to_add)) * factor_to_mult_by))
+                    ingredient_to_add = Ingredient(ingredient, new_ingredient_quantity)
+                    ingredient_arr.append(ingredient_to_add)
+            else:
+                new_ingredient_name = np.random.choice(ingredient_kinds_array[i])
+                # average amount of ounces in a recipe from inspiring set times a random number for variability
+                factor_to_mult_by = (TOTAL_RECIPES_OUNCES / num_recipes) * np.random.uniform(0.75, 1.5)
+                new_ingredient_quantity = float("{:.2f}".format(ratio_arr[i] * factor_to_mult_by))
+                ingredient_to_add = Ingredient(new_ingredient_name, new_ingredient_quantity)
+                ingredient_arr.append(ingredient_to_add)
         recipe_name = ingredient_arr[-1].name + ' cookie #' + str(random.randint(0,100))
         new_recipe = Recipe(recipe_name, ingredient_arr)
         generated_recipes.append(new_recipe)
