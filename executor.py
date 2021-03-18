@@ -5,6 +5,8 @@ from fitness_functions import novel_fitness_function, value_fitness_function
 
 TOTAL_RECIPES_OUNCES = 0
 NEW_RECIPES_TO_BE_GENERATED = 5
+MAX_NUM_OTHER_INGREDIENTS = 5
+
 
 
 
@@ -156,7 +158,7 @@ def generate_recipes(overall_ingredient_kind_ratio, ingredient_kinds_array, num_
             # special case for 'other' kind of ingredients where we want multiple of them instead of just 1
             if i == (len(ingredient_kinds_array) - 1):
                 other_ingredients_to_add = []
-                num_other_ingredients = random.randint(1, 5)
+                num_other_ingredients = random.randint(1, MAX_NUM_OTHER_INGREDIENTS)
                 for j in range(num_other_ingredients):
                     other_ingredient_name_to_add = ingredient_kinds_array[i][random.randint(0, len(ingredient_kinds_array[i]) - 1)]
                     # check to make sure ingredient not already selected
@@ -175,13 +177,21 @@ def generate_recipes(overall_ingredient_kind_ratio, ingredient_kinds_array, num_
                 new_ingredient_quantity = float("{:.2f}".format(ratio_arr[i] * factor_to_mult_by))
                 ingredient_to_add = Ingredient(new_ingredient_name, new_ingredient_quantity)
                 ingredient_arr.append(ingredient_to_add)
-        recipe_name = ingredient_arr[-1].name + ' cookie #' + str(random.randint(0,100))
+        other_ingredients = ingredient_arr[10:]
+        other_ingredinet_with_hightest_quantity = other_ingredients[0]
+        for i in range(1, len(other_ingredients)):
+            if other_ingredients[i].quantity > other_ingredinet_with_hightest_quantity.quantity:
+                other_ingredinet_with_hightest_quantity = other_ingredients[i]
+
+        recipe_name = other_ingredinet_with_hightest_quantity.name + ' cookie #' + str(random.randint(0,100))
         new_recipe = Recipe(recipe_name, ingredient_arr)
         generated_recipes.append(new_recipe)
 
     return generated_recipes
 
 # this function will create a 2d array that stores a value depending on if ingredients are together in a recipe from the inspiring set
+# it changes the values from total number of correlations to a correlation of the ingredients between 0 and 1, with 1 being a max 
+# correlation meaning theyre in every recipe in the inspiring set together
 def generate_taste_matrix(ingredient_kinds_array, all_recipes):
     single_ingredients_arr = []
     for ingredient_kind in ingredient_kinds_array:
@@ -203,8 +213,13 @@ def generate_taste_matrix(ingredient_kinds_array, all_recipes):
                 # this if stament doesn't change the flavor index when comparing the ingredient to itself
                 if other_ingredient_flavor_index != ingredient_flavor_index:
                     flavor_matrix[ingredient_flavor_index][other_ingredient_flavor_index] += 1
+
+    norm = np.linalg.norm(flavor_matrix)
+    norm_flavor_matrix = flavor_matrix / norm
+    norm_flavor_matrix[norm_flavor_matrix==0] = -1 / len(single_ingredients_arr)
+
     
-    return [flavor_matrix,single_ingredients_arr]
+    return [norm_flavor_matrix,single_ingredients_arr]
 
 
 
@@ -222,14 +237,13 @@ if __name__ == "__main__":
     return_arr = generate_taste_matrix(ingredient_kinds_array, all_recipes)
 
     flavor_matrix = return_arr[0]
+
+    print(flavor_matrix)
+
     single_ingredients_arr = return_arr[1]
 
     # ratio (adding up to 1) or our kinds from the recipes in the inspiring set
     overall_ingredient_kind_ratio = determine_rations(all_recipes)
-
-    
-
-    
 
     # our new recipes!
     new_crazy_recipes = generate_recipes(overall_ingredient_kind_ratio, ingredient_kinds_array, len(all_recipes))
@@ -239,8 +253,10 @@ if __name__ == "__main__":
     # this will print the recipes out for you once you run this file!
     for recipe in new_crazy_recipes:
         print(recipe)
-        novel_fitness = value_fitness_function(flavor_matrix, single_ingredients_arr, recipe)
-        print(novel_fitness)
+        value_fitness = value_fitness_function(flavor_matrix, single_ingredients_arr, recipe)
+        print("value fitness: " + str(value_fitness))
+        novel_fitness = novel_fitness_function(recipe, MAX_NUM_OTHER_INGREDIENTS)
+        print("novel fitness: " + str(novel_fitness))
 
     # # this will print the recipes out for you once you run this file!
     # for recipe in new_crazy_recipes:
