@@ -216,7 +216,7 @@ def generate_taste_matrix(ingredient_kinds_array, all_recipes):
 
     norm = np.linalg.norm(flavor_matrix)
     norm_flavor_matrix = flavor_matrix / norm
-    norm_flavor_matrix[norm_flavor_matrix==0] = -1 / len(single_ingredients_arr)
+    norm_flavor_matrix[norm_flavor_matrix==0] = -1 / (len(single_ingredients_arr) * 2)
 
     
     return [norm_flavor_matrix,single_ingredients_arr]
@@ -238,8 +238,6 @@ if __name__ == "__main__":
 
     flavor_matrix = return_arr[0]
 
-    print(flavor_matrix)
-
     single_ingredients_arr = return_arr[1]
 
     # ratio (adding up to 1) or our kinds from the recipes in the inspiring set
@@ -250,13 +248,23 @@ if __name__ == "__main__":
 
     print("\n")
 
+    best_recipe = None
+    best_recipe_fitness = -1000
+
     # this will print the recipes out for you once you run this file!
     for recipe in new_crazy_recipes:
-        print(recipe)
+        # print(recipe)
         value_fitness = value_fitness_function(flavor_matrix, single_ingredients_arr, recipe)
-        print("value fitness: " + str(value_fitness))
         novel_fitness = novel_fitness_function(recipe, MAX_NUM_OTHER_INGREDIENTS)
-        print("novel fitness: " + str(novel_fitness))
+        total_fitness = novel_fitness + value_fitness
+
+        if total_fitness > best_recipe_fitness:
+            best_recipe_fitness = total_fitness
+            best_recipe = recipe
+
+    print(best_recipe)
+    print(best_recipe_fitness)
+
 
     # # this will print the recipes out for you once you run this file!
     # for recipe in new_crazy_recipes:
