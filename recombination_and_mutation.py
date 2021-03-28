@@ -4,26 +4,32 @@ from recipe_and_ingredient_classes import Recipe, Ingredient, KINDS
 MAX_OUNCES = 20
 RECIPE_COUNTER = 1
 '''
-This funtion normalizes the amount of all the ingredient to sum to 100 oz. It takes the sum of all
-the ingredient quantities finds a factor to multiply each ingredient using 100/denominator. This
-readjusts the sum to be 100 oz. Values are rounded to 2 decimal points. 
+This funtion normalizes the amount of other kind ingredients to the ideal ratio based on the inspiring set. 
+Values are rounded to 2 decimal points. 
 '''
 # THIS MAY NOT BE NEEDED SINCE WE START FROM A PREDETERMINED RATIO
-def normalize_recipe(recipe):
-   denominator = 0 
-   for ingredient in recipe.ingredient_arr:
-      denominator += ingredient.quantity
-   factor = 100/denominator
-   for ingredient in recipe.ingredient_arr:
-      #renormalize values to 2 decimal points
-      ingredient.set_quantity(float("{:.2f}".format(ingredient.quantity * factor))) 
+def normalize_other_ingredients_in_recipe(recipe, average_recipe_ounces, ingredient_kind_ratio_matrix):
+   average_amount_other_ingredients = average_recipe_ounces * ingredient_kind_ratio_matrix[-1]
+   total_other_ingredient_ounces_in_recipe = 0
+   for i in range(10, len(recipe.ingredient_arr)):
+      total_other_ingredient_ounces_in_recipe += recipe.ingredient_arr[i].quantity
+   # below is factor that other kind ingredients are compared to ideal ratio
+   factor = total_other_ingredient_ounces_in_recipe / average_amount_other_ingredients
+   factor *= random.uniform(0.9,1.1)
+
+   # renormalizes the ingredeint amount
+   for i in range(10, len(recipe.ingredient_arr)):
+      recipe.ingredient_arr[i].set_quantity(float("{:.2f}".format(recipe.ingredient_arr[i].quantity / factor)))
+   
+   return recipe
+   
 
 
 '''
 Creates the first half of the next generation through recombination and mutation. Goes through the parent
 generation by two's combing each set of 2 into a new offspring recipe
 '''
-def make_next_gen(parents, mutationRate, ingredient_kinds_array):
+def make_next_gen(parents, mutationRate, ingredient_kinds_array, average_recipe_ounces, ingredient_kind_ratio_matrix):
    #first half of next generation will be placed into next_gen
    next_gen = []
    for i in range(0, len(parents), 2):
@@ -43,8 +49,8 @@ def make_next_gen(parents, mutationRate, ingredient_kinds_array):
 
    # Normalize all recipies so they are a total of 100 oz
    # THIS MAY NOT BE NEEDED SINCE WE START FROM A PREDETERMINED RATIO
-#    for recipe in next_gen:
-#       normalize_recipe(recipe)
+   for recipe in next_gen:
+      normalize_other_ingredients_in_recipe(recipe, average_recipe_ounces, ingredient_kind_ratio_matrix)
    return next_gen
       
 

@@ -6,11 +6,14 @@ from fitness_functions import novel_fitness_function, value_fitness_function
 from rank_selection import rank_selection, rank_selection_cum_prob_list, sort_by_rank
 
 TOTAL_RECIPES_OUNCES = 0
+AVERAGE_RECIPE_OUNCES = 0
+
+# Below are variables that you can change 
 RECIPES_IN_POPULATION = 16
 MAX_NUM_OTHER_INGREDIENTS = 5
 MIN_NUM_OTHER_INGREDIENTS = 2
-MUTATION_RATE = 0.1
-TOTAL_GENERATIONS = 1000
+MUTATION_RATE = 0.05
+TOTAL_GENERATIONS = 500
 
 
 
@@ -60,14 +63,15 @@ def read_recipes():
     recipe_arr = []
     all_ingredient_matrix = [[],[],[],[],[],[],[],[],[],[],[]]
 
-    open_file = open("cleaned_recipes.txt", 'r')
+    open_file = open("big_recipes.txt", 'r')
     lines = open_file.readlines()
     
 
-    for i in range(len(lines)):
+    for i in range(2, len(lines)):
         # recipe starts after its url which all start with https
-        if lines[i-1][0] == 'h': 
-            j = i
+        if lines[i-1] == '\n' and lines[i-2] == '\n': 
+            # recipe_score = lines[i+1] 
+            j = i + 3
             ingredients_arr = []
             # iterate through all ingredients
             while(lines[j] != '\n' and j < (len(lines) - 1)):
@@ -89,7 +93,8 @@ def read_recipes():
             new_recipe = Recipe(final_recipe_name, ingredients_arr)
             recipe_arr.append(new_recipe)
 
-
+    global AVERAGE_RECIPE_OUNCES
+    AVERAGE_RECIPE_OUNCES = TOTAL_RECIPES_OUNCES / len(recipe_arr)
 
     return [recipe_arr, all_ingredient_matrix]
 
@@ -223,7 +228,7 @@ def generate_taste_matrix(ingredient_kinds_array, all_recipes):
 
     norm = np.linalg.norm(flavor_matrix)
     norm_flavor_matrix = flavor_matrix / norm
-    norm_flavor_matrix[norm_flavor_matrix==0] = -1 / (len(single_ingredients_arr) * 2)
+    norm_flavor_matrix[norm_flavor_matrix==0] = -1 / (len(single_ingredients_arr))
 
     
     return [norm_flavor_matrix,single_ingredients_arr]
@@ -243,8 +248,11 @@ if __name__ == "__main__":
 
     return_arr = generate_taste_matrix(ingredient_kinds_array, all_recipes)
 
+    # point values based on whether two ingredients go well together or not
+    # this is determined by how many times they are in the same recipe - more times means higher score
     flavor_matrix = return_arr[0]
 
+    # a 1D array of all of the ingredients
     single_ingredients_arr = return_arr[1]
 
     # ratio (adding up to 1) or our kinds from the recipes in the inspiring set
@@ -268,7 +276,7 @@ if __name__ == "__main__":
         # below is a list of recipes that will be recombined and potentially mutated
         selected_pop = rank_selection(ranked_pop, cumulative_probs)
         # below gives us our next generation
-        next_gen = make_next_gen(selected_pop, MUTATION_RATE, ingredient_kinds_array)
+        next_gen = make_next_gen(selected_pop, MUTATION_RATE, ingredient_kinds_array, AVERAGE_RECIPE_OUNCES, overall_ingredient_kind_ratio)
         # below adds the top half from the previous generation to our new recombined and mutated recipes
         middle_index_of_population = int(len(ranked_pop)/2)
         for j in range(middle_index_of_population, len(ranked_pop)):

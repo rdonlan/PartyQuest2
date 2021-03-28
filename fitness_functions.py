@@ -1,6 +1,6 @@
 
 NOVELTY_FITNESS_MULTIPLIER = 1
-VALUE_FITNESS_MULTIPLIER = 1
+VALUE_FITNESS_MULTIPLIER = 1000
 
 
 # this function will return a fitness score based on the novelity of the recipe
