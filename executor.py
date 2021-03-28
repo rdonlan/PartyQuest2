@@ -1,11 +1,16 @@
+from recombination_and_mutation import make_next_gen
 import numpy as np 
 import random
 from recipe_and_ingredient_classes import Recipe, Ingredient, KINDS
 from fitness_functions import novel_fitness_function, value_fitness_function
+from rank_selection import rank_selection, rank_selection_cum_prob_list, sort_by_rank
 
 TOTAL_RECIPES_OUNCES = 0
-NEW_RECIPES_TO_BE_GENERATED = 5
+RECIPES_IN_POPULATION = 16
 MAX_NUM_OTHER_INGREDIENTS = 5
+MIN_NUM_OTHER_INGREDIENTS = 2
+MUTATION_RATE = 0.1
+TOTAL_GENERATIONS = 1000
 
 
 
@@ -117,6 +122,8 @@ def determine_rations(all_recipes):
         # add all of the ratios together for all the recipes from the inspiring set
         recipe_kind_ratios_added += recipe_kind_ratio
 
+    
+
     # divide every ratio within this array by the total number of recipes to make the total ratios also sum to 1
     ingredient_kind_overall_ratio = np.divide(recipe_kind_ratios_added, len(all_recipes))
 
@@ -145,7 +152,7 @@ def generate_recipes(overall_ingredient_kind_ratio, ingredient_kinds_array, num_
     generated_recipes = []
 
     new_ratios = []
-    for i in range(NEW_RECIPES_TO_BE_GENERATED):
+    for i in range(RECIPES_IN_POPULATION):
         cloned_ratios = overall_ingredient_kind_ratio.copy()
         for j in range(len(cloned_ratios)):
             value_to_add = np.random.uniform(-1 * cloned_ratios[j], cloned_ratios[j])
@@ -158,7 +165,7 @@ def generate_recipes(overall_ingredient_kind_ratio, ingredient_kinds_array, num_
             # special case for 'other' kind of ingredients where we want multiple of them instead of just 1
             if i == (len(ingredient_kinds_array) - 1):
                 other_ingredients_to_add = []
-                num_other_ingredients = random.randint(1, MAX_NUM_OTHER_INGREDIENTS)
+                num_other_ingredients = random.randint(MIN_NUM_OTHER_INGREDIENTS, MAX_NUM_OTHER_INGREDIENTS)
                 for j in range(num_other_ingredients):
                     other_ingredient_name_to_add = ingredient_kinds_array[i][random.randint(0, len(ingredient_kinds_array[i]) - 1)]
                     # check to make sure ingredient not already selected
@@ -244,15 +251,39 @@ if __name__ == "__main__":
     overall_ingredient_kind_ratio = determine_rations(all_recipes)
 
     # our new recipes!
-    new_crazy_recipes = generate_recipes(overall_ingredient_kind_ratio, ingredient_kinds_array, len(all_recipes))
+    population = generate_recipes(overall_ingredient_kind_ratio, ingredient_kinds_array, len(all_recipes))
 
     print("\n")
 
-    best_recipe = None
-    best_recipe_fitness = -1000
+    
+
+    final_generation = []
+
+    for i in range(TOTAL_GENERATIONS):
+        print('generation: ' + str(i))
+        # below is a list of recipes in ranked order, highest index is best rank
+        ranked_pop = sort_by_rank(population, flavor_matrix, single_ingredients_arr)
+        # list of cumulative probabilities based on size of population
+        cumulative_probs = rank_selection_cum_prob_list(len(ranked_pop))
+        # below is a list of recipes that will be recombined and potentially mutated
+        selected_pop = rank_selection(ranked_pop, cumulative_probs)
+        # below gives us our next generation
+        next_gen = make_next_gen(selected_pop, MUTATION_RATE, ingredient_kinds_array)
+        # below adds the top half from the previous generation to our new recombined and mutated recipes
+        middle_index_of_population = int(len(ranked_pop)/2)
+        for j in range(middle_index_of_population, len(ranked_pop)):
+                next_gen.append(ranked_pop[j])
+        # set next generation as the population
+        population = next_gen
+        #if the final genreation has been reached set current generation to final generation
+        if i == (TOTAL_GENERATIONS - 1):
+            final_generation = next_gen
+
 
     # this will print the recipes out for you once you run this file!
-    for recipe in new_crazy_recipes:
+    best_recipe = None
+    best_recipe_fitness = -1000
+    for recipe in final_generation:
         # print(recipe)
         value_fitness = value_fitness_function(flavor_matrix, single_ingredients_arr, recipe)
         novel_fitness = novel_fitness_function(recipe, MAX_NUM_OTHER_INGREDIENTS)
@@ -262,8 +293,9 @@ if __name__ == "__main__":
             best_recipe_fitness = total_fitness
             best_recipe = recipe
 
+    print('\n')
     print(best_recipe)
-    print(best_recipe_fitness)
+    print("best recipe fitenss: " + str(best_recipe_fitness))
 
 
     # # this will print the recipes out for you once you run this file!

@@ -2,6 +2,7 @@
 NOVELTY_FITNESS_MULTIPLIER = 1
 VALUE_FITNESS_MULTIPLIER = 1
 
+
 # this function will return a fitness score based on the novelity of the recipe
 def novel_fitness_function(recipe, max_num_other_ingredients):
     other_ingreients = recipe.ingredient_arr[10:]
