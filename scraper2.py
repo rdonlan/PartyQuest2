@@ -108,6 +108,10 @@ for a given ingredient, converts to ounces, then writes it to a file.
 def read_and_make_recipie(html_string, name):
     t.write(name)
     t.write("\n")
+    rating = re.findall("\"og:rating\" content=\".*\"", html_string)[0]
+    trimmed_rating = rating[21:-1]
+    t.write(trimmed_rating)
+    t.write("\n")
     list_of_ingredient = re.findall("data-ingredient = \".+?\" data-unit", html_string)
     list_of_ingredient_amounts = re.findall("data-init-quantity = \".+?\" data-unit", html_string)
     list_of_units = re.findall("data-unit = \".*?\"", html_string)
@@ -165,7 +169,9 @@ on them. There are try and finally statements, becase there are some inconsisten
 '''
 def travese_tree_of_cookies_and_get_units(url_link):
     html_string = get_url_string(url_link)
-    if check_if_recipe(html_string):
+    print(url_link)
+    if check_if_recipe(html_string) and url_link in RECIPIES:
+        RECIPIES.append(url_link)
         try:
             read_and_make_recipie(html_string, url_link)
         finally:
@@ -180,20 +186,21 @@ def travese_tree_of_cookies_and_get_units(url_link):
             finally:
                 print("recipie added")
         
-                
-        
         return
     for url in get_child_hyperlinks(html_string):
+        if url_link == "https://www.allrecipes.com/recipes/842/desserts/frostings-and-icings/cookie-frosting/":
+            return
         travese_tree_of_cookies_and_get_units(url)
     return
 
 
 
 if __name__ == "__main__":
+    global RECIPIES
+    RECIPIES = []
     url1 = "https://www.allrecipes.com/recipes/362/desserts/cookies/"#cookies url
-    t = open("filename.txt", "w")#file to write too
+    t = open("big_recipes.txt", "w")#file to write too
 
-    
     travese_tree_of_cookies_and_get_units(url1)#traverse tree
 
     t.close()#close file
