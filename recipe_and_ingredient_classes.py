@@ -81,13 +81,14 @@ class Ingredient(object):
 '''
 def get_kind(name):
     if "sugar" in name:
-        return "sugar"
+        if "refrigerated" not in name:
+            return "sugar"
     if "flour" in name:
         return "flour"
-    if "salt" in name:
+    if "salt" in name and "salted" not in name:
         return "salt"
     if "butter" in name:
-        if "butterscotch" not in name and "buttermilk" not in name: #exclude edge case
+        if "butterscotch" not in name and "buttermilk" not in name and "peanut" not in name: #exclude edge case
             return "butter"
     if "baking powder" in name:
         return "baking powder"
@@ -97,7 +98,8 @@ def get_kind(name):
     if "egg" in name:
         return "egg"
     if "vanilla" in name:
-        return "vanilla"
+        if "french" not in name or "French" not in name:
+            return "vanilla"
     if "chips" in name:
         return "chips"
     if "baking soda" in name:
