@@ -16,23 +16,13 @@ MUTATION_RATE = 0.05
 TOTAL_GENERATIONS = 500
 
 
-
-
-# def normalize_recipe(recipe):
-#    denominator = 0 
-#    for ingredient in recipe.ingredient_arr:
-#       denominator += ingredient.quantity
-#    factor = 100/denominator
-#    for ingredient in recipe.ingredient_arr:
-#       #renormalize values to 2 decimal points
-#       ingredient.set_quantity(float("{:.2f}".format(ingredient.quantity * factor))) 
-
-'''Function to find the Nth occurrence of a character  
-    params:
+'''
+Function to find the Nth occurrence of a character  
+    Params:
         @string {str}: string that you are checking
         @ch {str}: the char you want to find the nth occurance of
         @N {int}: the number occurance you want to find
-    return:
+    Return:
         int --> the nth occurance or -1 if not present
 '''
 def find_nth_occur(string, ch, N) : 
@@ -47,16 +37,16 @@ def find_nth_occur(string, ch, N) :
       
     return -1; 
 
-'''
-This method reads the cleaned_recipes.txt file and creates the recipe and ingredient objects
-from the inspiring set
-params:
-    NONE
-return:
-    @recipe_arr {arr[Recipe objs]}: this array contains all of the recipe objects from the inspiring set
-    @all_ingredient_matrix {arr[arr[str]]}: this 2D matrix holds 11 arrays which each contain the ingredients 
-    of one type. So the first array contains all types of sugar from the inspiring set, the next all types
-    of flour, etc.
+''' 
+This method reads the big_recipes.txt file that contains all 477 of our webscrapped recipes and creates 
+respective recipe and ingredient objectsfrom the inspiring set
+    Params:
+        NONE
+    Return:
+        @recipe_arr {arr[Recipe objs]}: this array contains all of the recipe objects from the inspiring set
+        @all_ingredient_matrix {arr[arr[str]]}: this 2D matrix holds 11 arrays which each contain the ingredients 
+            of one type. So the first array contains all types of sugar from the inspiring set, the next all types
+            of flour, etc.
 '''
 def read_recipes():
 
@@ -102,11 +92,11 @@ def read_recipes():
 '''
 This method determines the ratios of the 11 different kinds of ingredients to each other from the recipes in the 
 inspiring set
-params:
-    @all_recipes {arr[Recipe objs]}: all of the recipe objects from the inspiring set
-return:
-    @ingredient_kind_overall_ratio {arr[float]}: contains an array of the ratios of each type of ingredient to a whole
-    recipe. The total of the ratios sum up to one.
+    Params:
+        @all_recipes {arr[Recipe objs]}: all of the recipe objects from the inspiring set
+    Return:
+        @ingredient_kind_overall_ratio {arr[float]}: contains an array of the ratios of each type of ingredient to a whole
+            recipe. The total of the ratios sum up to one.
 '''
 def determine_rations(all_recipes):
 
@@ -141,16 +131,17 @@ the 'ideal' ratio of kinds of ingredients from the @overall_ingredient_kind_rati
 either adding a randomly generated number between its negative value and its positive value.  So the two edge cases are that the ingredient
 kind can have 0oz, or 2 times the 'ideal' ratio in it.  Then the total amount of ounces in the recipe will be similary randomly generated. The average
 ounces of a recipe is found in this method, and it is multiplied by 0.75-1.5 to determine the total amount of ounces for the newly generated recipe. 
-It will also (currently) select one ingredient from each type to be added to the recipe in the amount of ounces of its slightly altered ratio.
-params:
-    @overall_ingredient_kind_ratio {arr[float]}: contains an array of the ratios of each type of ingredient to a whole
-    recipe. THe total of the ratios sum up to one.
-    @ingredient_kinds_array {arr[arr[str]]}: this 2D matrix holds 11 arrays which each contain the ingredients 
-    of one type. So the first array contains all types of sugar from the inspiring set, the next all types
-    of flour, etc.
-    @num_recipes {int}: the number of recipes from our inspiring set
-return:
-    generated_recipes {arr[Recipe objs]}: this contains the newly generated recipes
+It will also select one ingredient from each type to be added to the recipe in the amount of ounces of its slightly altered ratio, with the exception that
+between MIN_NUM_OTHER_INGREDIENTS and MAX_NUM_OTHER_INGREDIENTS number of other kind ingredients will be added.
+    Params:
+        @overall_ingredient_kind_ratio {arr[float]}: contains an array of the ratios of each type of ingredient to a whole
+            recipe. THe total of the ratios sum up to one.
+        @ingredient_kinds_array {arr[arr[str]]}: this 2D matrix holds 11 arrays which each contain the ingredients 
+            of one type. So the first array contains all types of sugar from the inspiring set, the next all types
+            of flour, etc.
+        @num_recipes {int}: the number of recipes from our inspiring set
+    Return:
+        @generated_recipes {arr[Recipe objs]}: this contains the newly generated recipes
 '''      
 def generate_recipes(overall_ingredient_kind_ratio, ingredient_kinds_array, num_recipes):
 
@@ -201,9 +192,25 @@ def generate_recipes(overall_ingredient_kind_ratio, ingredient_kinds_array, num_
 
     return generated_recipes
 
-# this function will create a 2d array that stores a value depending on if ingredients are together in a recipe from the inspiring set
-# it changes the values from total number of correlations to a correlation of the ingredients between 0 and 1, with 1 being a max 
-# correlation meaning theyre in every recipe in the inspiring set together
+'''
+This function will create a 2d array that stores a value depending on if ingredients are together in a recipe from the inspiring set.
+This matrix is N x N long, where N is number of unique ingredients. The value of arr[ingredient1][ingredient2] and arr[ingredient2][ingredient2] will
+be incremented each time a recipe is found to have both ingredients in it. Once every recipe has been checked the values will be normalized to between 0 and 1 
+such that 1 is the max correlation, meaning theyre in every recipe in the inspiring set together, and 0 means they aren't in any recipe together. At the end, every 
+value that is 0 will be turned into a negative value (determined by -1 / num unique ingredients) to show that two ingredients probably don't go well together if
+they were never in a single recipe together
+    Params:
+        @ingredient_kinds_array {arr[arr[str]]}: this 2D matrix holds 11 arrays which each contain the ingredients 
+            of one type. So the first array contains all types of sugar from the inspiring set, the next all types
+            of flour, etc.
+        @all_recipes {arr[Recipe objs]}: all of the recipe objects from the inspiring set
+    Return:
+        @norm_flavor_matrix {arr[arr[float]]}: this 2D array contains N arrays that are a length of N where N is the number of unique ingredients in the
+            inspiring set. Each arr will contain the correlation values for that ingredient with every other unique ingredient. The index of each ingredient in 
+            @single_ingredients_arr corresponds to the index of the ingredient's correlation array within the 2D array, as well as its position in every
+            other ingredient's correlation array. 
+        @single_ingredients_arr {arr[Ingredient objs]}: all of the unique ingredient objects in a 1D array in the order they were created
+'''
 def generate_taste_matrix(ingredient_kinds_array, all_recipes):
     single_ingredients_arr = []
     for ingredient_kind in ingredient_kinds_array:
@@ -221,20 +228,19 @@ def generate_taste_matrix(ingredient_kinds_array, all_recipes):
                 other_ingredient_name = other_ingredient.name
                 other_ingredient_flavor_index = single_ingredients_arr.index(other_ingredient_name)
                 # below is adding a value to the flavor matrix if two ingredients are in a recipe together
-                # add a multiplier by the recipe ranking below when ready
+                # add a multiplier by the recipe ranking below as a future way to potentially improve this code
+
                 # this if stament doesn't change the flavor index when comparing the ingredient to itself
                 if other_ingredient_flavor_index != ingredient_flavor_index:
                     flavor_matrix[ingredient_flavor_index][other_ingredient_flavor_index] += 1
 
+    # make all values within flavor_matrix between 0 and 1 proportionally
     norm = np.linalg.norm(flavor_matrix)
     norm_flavor_matrix = flavor_matrix / norm
+    # make all values that were 0 within the flavor matrix a negative number
     norm_flavor_matrix[norm_flavor_matrix==0] = -1 / (len(single_ingredients_arr))
 
-    
-    return [norm_flavor_matrix,single_ingredients_arr]
-
-
-
+    return [norm_flavor_matrix, single_ingredients_arr]
 
 
 if __name__ == "__main__":
@@ -248,36 +254,34 @@ if __name__ == "__main__":
 
     return_arr = generate_taste_matrix(ingredient_kinds_array, all_recipes)
 
-    # point values based on whether two ingredients go well together or not
-    # this is determined by how many times they are in the same recipe - more times means higher score
+    # array that contains point values based on whether two ingredients go well together or not
+    # this is determined by how many times they are in the same recipe - more times means higher score - 0 times means negative score
     flavor_matrix = return_arr[0]
 
-    # a 1D array of all of the ingredients
+    # a 1D array of all unique ingredient objects
     single_ingredients_arr = return_arr[1]
 
-    # ratio (adding up to 1) or our kinds from the recipes in the inspiring set
+    # average ratio (adding up to 1) of each kind in a recipe from the inspiring set
     overall_ingredient_kind_ratio = determine_rations(all_recipes)
 
-    # our new recipes!
+    # the first generation of new recipes
     population = generate_recipes(overall_ingredient_kind_ratio, ingredient_kinds_array, len(all_recipes))
 
     print("\n")
 
-    
-
     final_generation = []
 
     for i in range(TOTAL_GENERATIONS):
-        print('generation: ' + str(i))
-        # below is a list of recipes in ranked order, highest index is best rank
+        print('Cheffing cookie batch: ' + str(i))
+        # below is an arr of recipes in ranked order from the previous generation, highest index is best rank
         ranked_pop = sort_by_rank(population, flavor_matrix, single_ingredients_arr)
-        # list of cumulative probabilities based on size of population
+        # list of cumulative probabilities based on size of population to select a recipe for recombination
         cumulative_probs = rank_selection_cum_prob_list(len(ranked_pop))
         # below is a list of recipes that will be recombined and potentially mutated
         selected_pop = rank_selection(ranked_pop, cumulative_probs)
-        # below gives us our next generation
+        # below is a list of RECIPES_IN_POPULATION/2 from recombination and potential mutations
         next_gen = make_next_gen(selected_pop, MUTATION_RATE, ingredient_kinds_array, AVERAGE_RECIPE_OUNCES, overall_ingredient_kind_ratio)
-        # below adds the top half from the previous generation to our new recombined and mutated recipes
+        # Adds the top half from the previous generation to our new recombined and mutated recipes
         middle_index_of_population = int(len(ranked_pop)/2)
         for j in range(middle_index_of_population, len(ranked_pop)):
                 next_gen.append(ranked_pop[j])
@@ -292,25 +296,24 @@ if __name__ == "__main__":
     best_recipe = None
     best_recipe_fitness = -1000
     for recipe in final_generation:
-        # print(recipe)
+        print(recipe)
         value_fitness = value_fitness_function(flavor_matrix, single_ingredients_arr, recipe)
         novel_fitness = novel_fitness_function(recipe, MAX_NUM_OTHER_INGREDIENTS)
         total_fitness = novel_fitness + value_fitness
+
+        print('novel fitness score: ' + str(novel_fitness))
+        print('value fitness score: ' + str(value_fitness))
 
         if total_fitness > best_recipe_fitness:
             best_recipe_fitness = total_fitness
             best_recipe = recipe
 
+    # a few print statements so that the best recipe will be put in the terminal
     print('\n')
+    print('----------- best recipe -----------')
     print(best_recipe)
     print("best recipe fitenss: " + str(best_recipe_fitness))
-
-
-    # # this will print the recipes out for you once you run this file!
-    # for recipe in new_crazy_recipes:
-    #     print(recipe)
-    #     novel_fitness = novel_fitness_function(recipe)
-    #     print(novel_fitness)
+    print('----------- best recipe -----------')
 
 
     

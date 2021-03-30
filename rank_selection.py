@@ -8,6 +8,10 @@ MAX_NUM_OTHER_INGREDIENTS = 5
 This method returns the sum of all the ranks for a given population. It iterates through the size of the
 population and sums all the index's. The denominator will be used to calculate probabilities for each
 individual index. 
+    Params:
+        @pop_num {int}: number of individuals within the population
+    Return:
+        int --> the denominator to be used in rank sum
 '''
 def ranked_sum(pop_num):
     denominator = 0
@@ -21,6 +25,10 @@ This method returns a list with each index filled with probabilities. These prob
 all ranks up to the respective index divided by the total sumation of all indexes. For every index, the 
 probability is added to the return list creating a list of cumulative proababilites. This list will
 be iterated through and checked against a random generated number.
+    Params:
+        @pop_num {int}: number of individuals within the population
+    Return:
+        @prob_list {arr[float]}: each index, i, contains the probability of selecting an individual at that index, i, from a ranked population 
 '''
 def rank_selection_cum_prob_list(pop_num):
     denominator = ranked_sum(pop_num)
@@ -38,6 +46,18 @@ This method takes in the population to be sorted by rank. With this population, 
 filled with the corresponding ranks of each individual in the population. These two lists are merged into
 onelist of tuples that contains individuals and their rank. Rank is based of length of the array holding their 
 ingredients. This tuple list is sorted by rank, and a list is returned with the population now ordered by rank.  
+    Params:
+        @pop {arr[Recipe obj]}: population of recipes to be sorted by rank
+        @flavor_matrix {arr[arr[float]]}: this 2D array contains N arrays that are a length of N where N is the number of unique ingredients in the
+            inspiring set. Each arr will contain the correlation values for that ingredient with every other unique ingredient. The index of each ingredient in 
+            @single_ingredients_arr corresponds to the index of the ingredient's correlation array within the 2D array, as well as its position in every
+            other ingredient's correlation array. 
+        @single_ingredients_arr corresponds to the index of the ingredient's correlation array within the 2D array, as well as its position in every
+            other ingredient's correlation array. 
+    Return:
+        @r {arr[Recipe objs]}: a sorted list of recipes that are ranked by fitness
+
+
 '''
 def sort_by_rank(pop, flavor_matrix, single_ingredients_arr):
     # pop is an array containing our recipes
@@ -61,6 +81,11 @@ def sort_by_rank(pop, flavor_matrix, single_ingredients_arr):
 This method takes in the ranked_pop array, which contains the population of recipes sorted by rank. It then
 chooses the number of recipes equivalent to the population size (the size of our population) by calling the choose_individual
 method. This method returns an array of the population that will now be used for recombination.
+    Params:
+        @ranked_pop {arr[Recipe objs]}: list of recipes ranked by fitness
+        @prob_list {arr[float]}: each index, i, contains the probability of selecting an individual at that index, i, from a ranked population 
+    Return:
+        @rank_selection_pop {arr[Recipe objs]}: an array of the recipes that will be used for recombination
 '''
 def rank_selection(ranked_pop, prob_list):
     rank_selection_pop = []
@@ -76,6 +101,12 @@ This method selects an individual index based of a randomly generated probabilit
 throuhg the cumulative probabilites list and cheking if the randomly generated value(between 1-0) is greater
 than the current index probability. If it is larger it means that this the individual(recipe) at this index
 will be selected for breeding. The cumulative list allows for this itrative process.  
+    Params:
+        @pop {arr[Recipe obj]}: population of recipes to be sorted by rank
+        @prob_list {arr[float]}: each index, i, contains the probability of selecting an individual at that index, i, from a ranked population 
+    Return:
+        @chosen_indiv {Recipe obj}: the chosen recipe object
+
 '''
 def choose_individual(pop, prob_list):
     p = random.uniform(0, 1)
