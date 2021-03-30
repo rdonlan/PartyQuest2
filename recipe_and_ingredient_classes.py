@@ -1,11 +1,12 @@
+
+# This array shows the index positions, and category types/names, of our different kinds of ingredients in a recipe
+KINDS = ["sugar", "flour", "salt", "butter", "baking powder", "milk", "egg", "vanilla", "chips", "baking soda", "other"]
+
 '''
-THe recipe class reperesents a recipe which contains a name and a list of ingredient. It has string 
+The recipe class reperesents a recipe which contains a name and a list of ingredient. It has string 
 representation method, and check_for_ingredients method. Check_for_ingrediens checks if an ingredient 
 type is in the recipe 
 '''
-
-
-KINDS = ["sugar", "flour", "salt", "butter", "baking powder", "milk", "egg", "vanilla", "chips", "baking soda", "other"]
 
 class Recipe(object):
     def __init__(self, name, ingredient_arr):
@@ -33,11 +34,12 @@ class Recipe(object):
         for ingredient in self.ingredient_arr:
             str_to_add = str(ingredient.quantity) + " oz of " + ingredient.name + "\n"
             final_string += str_to_add
-        return final_string
-        
+        return final_string     
+
+
 '''
-Ingredient class represents ingredients in a recipe. An Ingredient has a name and quanity, and two setter
-methods
+Ingredient class represents ingredients in a recipe. An Ingredient has a name, quanity and kind, as well as
+two setter methods
 '''
 class Ingredient(object):
     def __init__(self, name, quantity):
@@ -64,16 +66,9 @@ class Ingredient(object):
         # allows you to use print(Ingredient)
         return str(self.quantity) + " oz of " + self.name
 
-# def get_kind(name):
-#     for kind in KINDS[:-1]: #exclude "other"
-#         # we need to fix edge text cases like milk chocolate chips
-#         if kind in name:
-#             return kind
 
-#     return "other"
-
-
-'''Helper Function to assign ingredient kinds from names
+'''Helper Function to assign ingredient kinds from names. There are edge cases that
+we have added in the form of extra if statements.
     Params:
         @string name: name of ingredient
     Return:
@@ -98,7 +93,7 @@ def get_kind(name):
     if "egg" in name:
         return "egg"
     if "vanilla" in name:
-        if "french" not in name or "French" not in name:
+        if "french" not in name or "French" not in name: #exclude edge case
             return "vanilla"
     if "chips" in name:
         return "chips"
