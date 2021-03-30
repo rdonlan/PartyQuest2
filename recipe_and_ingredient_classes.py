@@ -37,6 +37,22 @@ class Recipe(object):
         return final_string     
 
 
+    '''
+    Overridden __repr__ method that returns the object representation in string format
+    '''
+    def __repr__(self):
+        final_string = ''
+        final_string += "Recipe('" + self.name + "', ["
+
+        for ingredient in self.ingredient_arr:
+            final_string += ingredient.__repr__()
+            final_string += ", "
+
+        final_string += "])"
+
+        print(final_string)
+
+
 '''
 Ingredient class represents ingredients in a recipe. An Ingredient has a name, quanity and kind, as well as
 two setter methods
@@ -60,11 +76,17 @@ class Ingredient(object):
         self.kind = get_kind(name)
 
     '''
-    Returns quantity of the name of the ingredient 
+    Overridden __str__method that allows you to use print(Ingredient)
     '''
     def __str__(self):
-        # allows you to use print(Ingredient)
         return str(self.quantity) + " oz of " + self.name
+
+    '''
+    Overridden __repr__ method that returns the object representation in string format
+    '''
+    def __repr__(self):
+        return "Ingredient('" + self.name + "', " + str(self.quantity) + ")"
+
 
 
 '''Helper Function to assign ingredient kinds from names. There are edge cases that

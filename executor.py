@@ -296,13 +296,9 @@ if __name__ == "__main__":
     best_recipe = None
     best_recipe_fitness = -1000
     for recipe in final_generation:
-        print(recipe)
         value_fitness = value_fitness_function(flavor_matrix, single_ingredients_arr, recipe)
         novel_fitness = novel_fitness_function(recipe, MAX_NUM_OTHER_INGREDIENTS)
         total_fitness = novel_fitness + value_fitness
-
-        print('novel fitness score: ' + str(novel_fitness))
-        print('value fitness score: ' + str(value_fitness))
 
         if total_fitness > best_recipe_fitness:
             best_recipe_fitness = total_fitness
@@ -311,8 +307,8 @@ if __name__ == "__main__":
     # a few print statements so that the best recipe will be put in the terminal
     print('\n')
     print('----------- best recipe -----------')
+    print('\n')
     print(best_recipe)
-    print("best recipe fitenss: " + str(best_recipe_fitness))
     print('----------- best recipe -----------')
 
 
