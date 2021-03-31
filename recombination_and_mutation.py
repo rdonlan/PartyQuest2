@@ -51,6 +51,7 @@ generation by two's combing each set of 2 into a new offspring recipe.
 def make_next_gen(parents, mutationRate, ingredient_kinds_array, average_recipe_ounces, ingredient_kind_ratio_matrix):
    #first half of next generation will be placed into next_gen
    next_gen = []
+   random.shuffle(parents)
    for i in range(0, len(parents), 2):
       global RECIPE_COUNTER
       mutation = random.uniform(0,1)

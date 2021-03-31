@@ -1,0 +1,456 @@
+This text file will contain 15 examples of recipes and their two fitness scores. These recipes
+were all determined by our Genetic Algorithm using a population size of 16 and 200 generations.
+For each of the 10 recipes the two types of fitness scores, novel and value, will be displayed.
+For the first 5 the value fitness score was weighted much more heavily than the novelty fitness
+score (100 times), and for the middle 5 the novelty score is weighted much more than the value 
+fitness score (100 times), and for the last 5 the novelty and value fitness scores will be weighted
+euqally.
+
+As can be determined from an eye test by a human, the first grouping of recipes seem to be superior.
+When the value fitness is not made more important than the novelty fitness, the length of the recipes
+get out of control. The Genetic Algorithm is able to increase the fitness scores of the population by
+essentially just taking the recipes with the most ingredients, which does not necessarily make a good
+cookie. The first 5 recipes however dont have too many, or too little ingredients. And from our use of 
+the flavor matrix and the eye test it can be determined that these recipes look like they would
+be the most appealing and delicious. They also look the most like real cookie recipes.
+
+---------------------------------------------------------------------------------------------
+
+RECIPE 1:
+ground cinnamon cookie 3993 contains the ingredients below:
+18.44 oz of confectionary; sugar for decoration
+1.7 oz of all-purpose flour
+0.03 oz of salt
+0.26 oz of butter or margarine
+0.06 oz of baking powder
+1.3 oz of sweetened condensed milk
+6.99 oz of egg yolk
+0.01 oz of vanilla extract
+6.56 oz of white chocolate chips
+0.04 oz of baking soda
+7.13 oz of ground cinnamon
+7.95 oz of Granny Smith apples - peeled, cored and chopped
+
+value fitness: 1326.5501630108708
+novel fitness: 4.0
+
+---------------------------------------------------------------------------------------------
+
+RECIPE 2:
+applesauce cookie 3993 contains the ingredients below:
+4.86 oz of white sugar
+14.68 oz of all-purpose flour
+0.01 oz of salt
+1.61 oz of butter, softened but not melted
+0.03 oz of baking powder
+0.27 oz of evaporated milk
+6.4 oz of egg yolks
+0.34 oz of vanilla extract
+4.82 oz of semisweet chocolate chips
+0.0 oz of baking soda
+7.22 oz of applesauce
+2.85 oz of unsweetened baking chocolate
+5.82 oz of dark chocolate, cut into chunks
+
+value fitness: 1364.9095183804766
+novel fitness: 6.0
+
+---------------------------------------------------------------------------------------------
+
+RECIPE 3:
+flaked coconut cookie 3993 contains the ingredients below:
+16.77 oz of white sugar
+26.67 oz of all-purpose flour
+0.05 oz of fine salt
+4.11 oz of unsalted butter, softened
+0.04 oz of baking powder
+1.11 oz of milk, or as needed
+0.78 oz of egg yolk
+0.07 oz of pure vanilla extract
+5.88 oz of chocolate chips
+0.04 oz of baking soda
+10.83 oz of flaked coconut
+5.15 oz of quick cooking oats
+
+value fitness: 750.0864640796356
+novel fitness: 4.0
+
+---------------------------------------------------------------------------------------------
+
+RECIPE 4:
+semisweet chocolate, chopped cookie 3993 contains the ingredients below:
+22.51 oz of white sugar
+17.26 oz of blanched almond flour
+0.09 oz of fine salt
+9.03 oz of butter, softened
+0.11 oz of baking powder
+1.54 oz of milk
+0.18 oz of egg yolks
+0.07 oz of vanilla extract
+4.05 oz of peanut butter chips
+0.07 oz of baking soda
+5.86 oz of semisweet chocolate, chopped
+1.92 oz of candy coated, peanut butter-filled chocolate piece
+7.41 oz of dried sweetened cranberries
+
+value fitness: 546.7590246671991
+novel fitness: 6.0
+
+---------------------------------------------------------------------------------------------
+
+RECIPE 5:
+chocolate chunks (such as Nestle®) cookie 3993 contains the ingredients below:
+1.98 oz of white sugar
+9.58 oz of flour
+0.06 oz of sea salt
+6.44 oz of butter
+0.14 oz of baking powder
+1.61 oz of skim milk
+1.11 oz of egg, lightly beaten
+0.27 oz of vanilla extract
+3.4 oz of miniature semisweet chocolate chips
+0.04 oz of baking soda
+4.99 oz of chocolate chunks (such as Nestle®)
+5.24 oz of shortening
+1.72 oz of chunky peanut butter
+0.89 oz of water
+0.8 oz of chopped walnuts
+
+value fitness: 408.2685578889523
+novel fitness: 10.0
+
+---------------------------------------------------------------------------------------------
+
+RECIPE 6:
+white chocolate, chopped cookie 793 contains the ingredients below:
+26.72 oz of packed brown sugar
+5.68 oz of all-purpose flour, sifted
+0.03 oz of salt
+10.41 oz of softened butter
+0.02 oz of baking powder
+0.07 oz of unsweetened almond milk
+4.84 oz of egg
+0.1 oz of vanilla extract
+0.5 oz of semisweet chocolate chips
+0.02 oz of baking soda
+1.39 oz of white chocolate, chopped
+1.39 oz of marshmallows
+1.63 oz of dried blueberries
+1.9 oz of almond extract, or to taste
+0.85 oz of sweetened flaked coconut
+1.64 oz of white cake mix
+1.39 oz of McIntosh apples - peeled, cored, and diced
+1.09 oz of chopped pitted honey dates
+1.13 oz of chocolate graham cracker crumbs
+1.4 oz of instant coffee granules
+1.42 oz of mashed ripe bananas
+
+value fitness: 1.228978196309455
+novel fitness: 2200.0
+
+---------------------------------------------------------------------------------------------
+
+RECIPE 7:
+fresh lemon juice cookie 794 contains the ingredients below:
+0.79 oz of confectionary; sugar
+28.26 oz of unbleached all-purpose flour
+0.07 oz of salt
+2.47 oz of butter, melted and cooled
+0.08 oz of baking powder
+0.77 oz of evaporated milk
+4.04 oz of large egg
+0.2 oz of vanilla extract
+6.34 oz of white chocolate chips
+0.01 oz of baking soda
+0.55 oz of fresh lemon juice
+0.55 oz of chopped walnuts, or to taste
+0.55 oz of regular rolled oats
+0.55 oz of crisp rice cereal
+0.7 oz of ricotta cheese
+1.01 oz of chocolate flavored crispy rice cereal
+0.42 oz of ground pecans
+0.79 oz of coarsely chopped almonds
+0.74 oz of poppy seeds
+0.76 oz of apricot preserves, or preserves your choice
+2.3 oz of candy-coated peanut butter pieces (such as Reese's Pieces®), divided
+1.01 oz of green maraschino cherries, quartered
+0.96 oz of unsalted raw sunflower seeds
+1.22 oz of dried apricots
+1.25 oz of marshmallows
+
+value fitness: 0.439121476023943
+novel fitness: 3000.0
+
+---------------------------------------------------------------------------------------------
+
+REECIPE 8:
+whole roasted almonds cookie 793 contains the ingredients below:
+5.52 oz of white sugar
+9.39 oz of whole wheat flour
+0.04 oz of coarse salt
+1.9 oz of softened butter
+0.21 oz of baking powder
+0.64 oz of evaporated milk
+2.69 oz of eggs
+0.45 oz of vanilla extract
+1.1 oz of dark chocolate chips, or to taste
+0.04 oz of baking soda
+0.85 oz of whole roasted almonds
+1.26 oz of heavy whipping cream
+0.97 oz of walnut halves
+1.57 oz of chopped candied citron
+1.78 oz of dried cherries
+1.26 oz of pecans
+0.69 oz of grated lime peel
+1.13 oz of granular no-calorie sucralose sweetener (such as Splenda®)
+2.6 oz of polenta
+1.15 oz of corn syrup
+1.0 oz of shortbread cookie crumbs
+
+value fitness: 1.466193590223811
+novel fitness: 2200.0
+
+---------------------------------------------------------------------------------------------
+
+RECIPE 9:
+warm water cookie 793 contains the ingredients below:
+0.01 oz of packed light brown sugar
+5.71 oz of all-purpose flour
+0.07 oz of salt
+3.28 oz of butter, or as needed
+0.03 oz of baking powder
+2.16 oz of sweetened condensed milk
+5.59 oz of egg
+0.32 oz of French vanilla cake mix (such as Duncan Hines® Moist Deluxe)
+1.13 oz of vegan white chocolate chips
+0.02 oz of baking soda
+0.71 oz of warm water
+0.64 oz of multicolored candy sprinkles
+0.18 oz of maple extract
+0.87 oz of green tea powder (matcha)
+0.23 oz of chopped dried cranberries
+0.4 oz of walnut halves
+0.57 oz of peanut butter
+0.35 oz of white baking chocolate, divided
+0.57 oz of sweetened dried cranberries, chopped
+1.45 oz of finely chopped fresh lavender
+0.71 oz of food coloring
+1.35 oz of regular rolled oats
+1.12 oz of chocolate chip cake mix with pudding
+1.12 oz of vegetable oil
+1.86 oz of chipotle chile powder
+1.53 oz of Granny Smith apples, peeled, cored and cut into 1/4-inch pieces
+
+value fitness: 0.564695318
+
+---------------------------------------------------------------------------------------------
+
+RECIPE 10:
+fruit flavored Jell-O® mix cookie 793 contains the ingredients below:
+7.19 oz of granulated sugar
+26.35 oz of all-purpose flour
+0.09 oz of kosher salt
+10.3 oz of butter, or as needed
+0.05 oz of gluten-free baking powder
+1.13 oz of nonfat dry milk powder
+4.5 oz of large egg, lightly beaten
+0.42 oz of vanilla extract
+4.1 oz of vegan white chocolate chips
+0.04 oz of baking soda
+0.62 oz of fruit flavored Jell-O® mix
+0.87 oz of wheat bran
+0.63 oz of red maraschino cherries, quartered
+0.87 oz of granular sucrolose sweetener (such as Splenda®)
+0.8 oz of freshly squeezed lemon juice
+0.55 oz of sliced fresh strawberries
+0.46 oz of margarine, melted
+0.8 oz of quick cooking oats
+0.87 oz of almonds
+0.91 oz of instant coffee powder
+1.27 oz of pumpkin pie spice
+1.39 oz of long red vine licorice
+1.18 oz of fruit-flavored breakfast cereal (such as Post® Fruity Pebbles®), divided
+1.05 oz of toasted almond pieces
+1.15 oz of chopped dark chocolate
+4.4 oz of unsweetened chocolate, chopped
+
+value fitness: -0.0006702543525417687
+novel fitness: 3000.0
+
+---------------------------------------------------------------------------------------------
+
+RECIPE 11:
+raspberry extract cookie 799 contains the ingredients below:
+1.03 oz of light brown sugar
+15.72 oz of cake flour
+0.02 oz of kosher salt
+0.12 oz of unsalted butter, cut into cubes
+0.01 oz of baking powder
+1.24 oz of powdered milk
+3.84 oz of eggs, divided
+0.14 oz of French vanilla cake mix (such as Duncan Hines® Moist Deluxe)
+0.9 oz of semisweet chocolate chips
+0.07 oz of baking soda
+0.71 oz of raspberry extract
+0.56 oz of OREO Cookies, finely crushed
+0.68 oz of crushed walnuts
+0.41 oz of white baking chocolate, divided
+0.95 oz of chocolate-covered caramel candies
+0.48 oz of ground pecans
+0.27 oz of apples - peeled, cored and thinly sliced
+0.68 oz of reduced fat peanut butter
+0.41 oz of frozen whipped topping, thawed
+0.56 oz of fruit flavored Jell-O® mix
+0.88 oz of ground cloves
+1.61 oz of finely ground espresso beans
+1.14 oz of half-and-half
+0.81 oz of strawberry jam
+1.21 oz of potato starch
+2.77 oz of shredded coconut
+1.69 oz of semisweet dark chocolate, roughly chopped
+
+value fitness: -4.518086830041533
+novel fitness: 340.0
+
+---------------------------------------------------------------------------------------------
+
+RECIPE 12:
+freshly squeezed lemon juice cookie 793 contains the ingredients below:
+15.73 oz of white sugar
+10.48 oz of pastry flour
+0.07 oz of kosher salt (such as Diamond Crystal®)
+12.47 oz of unsalted butter
+0.0 oz of gluten-free baking powder
+0.82 oz of evaporated milk
+0.01 oz of eggs - at room temperature, separated, divided
+0.2 oz of vanilla extract
+2.49 oz of miniature chocolate chips, divided
+0.02 oz of baking soda
+1.07 oz of freshly squeezed lemon juice
+1.88 oz of freshly grated lemon zest
+1.34 oz of grape jelly
+1.45 oz of orange extract
+2.26 oz of vegetable shortening
+1.72 oz of coffee-flavored liqueur
+1.13 oz of Granny Smith apples - peeled, cored and chopped
+1.67 oz of white baking chocolate, divided
+1.25 oz of red velvet cake mix
+1.83 oz of apple - peeled, cored and diced
+
+value fitness: 2.749667948705788
+novel fitness: 200.0
+
+---------------------------------------------------------------------------------------------
+
+RECIPE 13:
+coarsely chopped almonds cookie 793 contains the ingredients below:
+8.54 oz of white sugar
+10.6 oz of gluten-free all-purpose baking flour
+0.07 oz of salt
+4.69 oz of butter flavored shortening
+0.14 oz of baking powder
+0.53 oz of milk, or more as needed
+2.04 oz of eggs
+0.35 oz of vanilla
+1.36 oz of butterscotch chips
+0.05 oz of baking soda
+0.29 oz of coarsely chopped almonds
+0.29 oz of nutmeg
+0.55 oz of rolled oats
+0.29 oz of vegetable oil
+1.1 oz of pumpkin pie spice
+0.29 oz of dried currants
+0.33 oz of creamy peanut butter
+0.13 oz of soft margarine
+0.46 oz of puffed wheat cereal
+0.27 oz of caramel ice cream topping
+0.47 oz of thinly sliced apples
+0.46 oz of devil's food cake mix with pudding
+1.29 oz of crisp rice cereal
+1.01 oz of Granny Smith apples, peeled, sliced
+0.82 oz of sweetened flaked coconut
+1.73 oz of OREO Cookies, finely crushed
+1.47 oz of amaretto liqueur
+1.47 oz of solid pack pumpkin puree
+2.05 oz of dried apricots
+
+value fitness: 7.07912488874169
+novel fitness: 380.0
+
+---------------------------------------------------------------------------------------------
+
+RECIPE 14:
+miniature marshmallows cookie 794 contains the ingredients below:
+3.63 oz of packed brown sugar
+4.61 oz of all-purpose flour
+0.04 oz of fine salt
+2.64 oz of butter or margarine, melted
+0.19 oz of gluten-free baking powder
+1.31 oz of milk
+5.99 oz of egg yolks
+0.14 oz of vanilla
+0.93 oz of milk chocolate chips
+0.03 oz of baking soda
+1.11 oz of miniature marshmallows
+1.14 oz of whole pecans
+1.04 oz of roughly chopped almonds
+0.8 oz of cream cheese frosting
+0.65 oz of regular rolled oats
+0.65 oz of golden raisins
+0.63 oz of coarsely chopped walnuts
+0.96 oz of cayenne pepper
+0.5 oz of lemon zest, or to taste
+0.63 oz of chopped candied citron
+1.14 oz of soft margarine
+1.04 oz of chopped apples
+2.22 oz of dried lavender buds
+1.56 oz of pitted dates, diced
+
+value fitness: -1.3993040122539278
+novel fitness: 280.0
+
+---------------------------------------------------------------------------------------------
+
+RECIPE 15:
+maple syrup cookie 1593 contains the ingredients below:
+1.57 oz of firmly packed light brown sugar
+11.85 oz of self-rising flour
+0.04 oz of salt
+3.08 oz of butter, melted
+0.08 oz of baking powder
+1.19 oz of buttermilk
+5.05 oz of egg yolks
+0.3 oz of vanilla extract
+4.4 oz of butterscotch chips
+0.01 oz of baking soda
+0.01 oz of maple syrup
+0.08 oz of cream-filled chocolate sandwich cookies (such as Oreo®)
+0.21 oz of chopped cashews
+0.08 oz of hazelnuts - toasted, skinned and coarsely chopped
+0.08 oz of large marshmallows
+0.08 oz of polenta
+0.08 oz of chopped pecans, toasted
+0.08 oz of canned solid-pack pumpkin
+0.08 oz of dried cherries
+0.08 oz of refrigerated crescent roll dough
+0.17 oz of orange extract
+0.21 oz of pastry for a 9-inch double crust pie
+0.45 oz of sweetened dried cranberries, chopped
+0.37 oz of apples - peeled, cored and finely diced
+0.37 oz of grated zucchini
+0.45 oz of wheat bran
+0.56 oz of lemon juice
+0.56 oz of pitted Medjool dates, cut into small pieces
+0.64 oz of vegetable shortening, melted
+0.45 oz of chopped almonds
+0.45 oz of almond paste
+1.2 oz of honey
+0.74 oz of chopped white chocolate
+1.42 oz of Pillsbury BEST® All Purpose Flour
+0.94 oz of mixed spice
+1.2 oz of chopped cherries
+1.09 oz of blanched slivered almonds
+1.27 oz of green food color
+
+value fitness: -1.7232193280640766
+novel fitness: 560.0

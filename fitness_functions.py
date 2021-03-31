@@ -1,7 +1,7 @@
 
 # These are the multipliers for our value and novel fitness scores
-NOVELTY_FITNESS_MULTIPLIER = 10
-VALUE_FITNESS_MULTIPLIER = 1000
+NOVELTY_FITNESS_MULTIPLIER = 100
+VALUE_FITNESS_MULTIPLIER = 100
 
 
 '''
